@@ -130,14 +130,16 @@
   }
 </style>
 
-<main class="main">
+<main class="main" >
+  <h2>TensorFlow FaceGen experiment, click to generate new faces</h2>
+  <div id="imgArea" style="display: none;">
   <section class="slideshow">
+    
     <div class="slide fade is-active">
       <span class="slide-number"></span>
       <figure class="slide-image">
-        <img
-          src="https://www.w3schools.com/howto/img_nature_wide.jpg"
-          alt="Mountain"
+        <img class = "imgActual"
+          src=""
         />
         <figcaption></figcaption>
       </figure>
@@ -146,9 +148,8 @@
     <div class="slide fade">
       <span class="slide-number"></span>
       <figure class="slide-image">
-        <img
-          src="https://www.w3schools.com/howto/img_snow_wide.jpg"
-          alt="Snow"
+        <img class = "imgActual"
+          src=""
         />
         <figcaption></figcaption>
       </figure>
@@ -157,27 +158,88 @@
     <div class="slide fade">
       <span class="slide-number"></span>
       <figure class="slide-image">
-        <img
-          src="https://www.w3schools.com/howto/img_mountains_wide.jpg"
-          alt="Snow"
+        <img class = "imgActual"
+        src="./moustache2.jpg"
         />
         <figcaption></figcaption>
       </figure>
     </div>
 
+    <div class="slide fade">
+      <span class="slide-number"></span>
+      <figure class="slide-image">
+        <img class = "imgActual"
+          src="./moustache1.jpg"
+        />
+        <figcaption></figcaption>
+      </figure>
+    </div>
+
+    <div class="slide fade">
+      <span class="slide-number"></span>
+      <figure class="slide-image">
+        <img class = "imgActual"
+        src="./moustache3.jpg"
+        />
+        <figcaption></figcaption>
+      </figure>
+    </div>
+  
 
     <div class="dots-container">
       <button id="genFace" onclick="genFace()">Generate another face</button>
-      <div id="loading"></div>
+      <div id="generating"></div>
       <!-- <span class="dot is-active" onclick="currentSlide(1)"></span>
       <span class="dot" onclick="currentSlide(2)"></span>
       <span class="dot" onclick="currentSlide(3)"></span> -->
     </div>
   </section>
+</div>
+<div id="loading"></div>
 </main>
 
+
 <script>
-const dots = Array.from(document.querySelectorAll(".dot"));
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
+window.addEventListener('load', 
+  function() { 
+    document.getElementById("loading").innerHTML = "loading...";
+    var faceImgIndex = new Array(50); // create an empty array with length 49
+    for(var i = 0; i < faceImgIndex.length; i++){
+      faceImgIndex[i] = i+1;
+    }
+    shuffle(faceImgIndex);
+    console.log(faceImgIndex);
+    imgs = Array.from(document.querySelectorAll(".imgActual"));
+    // console.log(String(faceImgIndex[0]));
+    imgs[0].src="http://colourofloosemetal.com/nnTFmessingAround/rs/" + String(faceImgIndex[0]) + ".jpg";
+    imgs[1].src="http://colourofloosemetal.com/nnTFmessingAround/rs/" + String(faceImgIndex[1]) + ".jpg";
+    Promise.resolve(1).delay(5000).then(function(v) {
+      document.getElementById("loading").innerHTML = "";
+      document.getElementById("imgArea").style.display = "block";
+  // alert("helloo");
+});
+  }, false);
+
+
+// const dots = Array.from(document.querySelectorAll(".dot"));
 
 let slideIndex = 1;
 
@@ -191,11 +253,11 @@ function plusSlides() {
   showSlides((slideIndex += num));
 }
 
-function currentSlide(e) {
-  if (e.target === dots[0]) showSlides((slideIndex = 1));
-  if (e.target === dots[1]) showSlides((slideIndex = 2));
-  if (e.target === dots[2]) showSlides((slideIndex = 3));
-}
+// function currentSlide(e) {
+//   if (e.target === dots[0]) showSlides((slideIndex = 1));
+//   if (e.target === dots[1]) showSlides((slideIndex = 2));
+//   if (e.target === dots[2]) showSlides((slideIndex = 3));
+// }
 
 function showSlides(n) {
   const slides = Array.from(document.querySelectorAll(".slide"));
@@ -215,18 +277,41 @@ function showSlides(n) {
 // dots.forEach((dot) => dot.addEventListener("click", currentSlide));
 
 
+function delay(t, v) {
+   return new Promise(function(resolve) { 
+       setTimeout(resolve.bind(null, v), t)
+   });
+}
+
+Promise.prototype.delay = function(t) {
+    return this.then(function(v) {
+        return delay(t, v);
+    });
+}
+
+
+
+
 async function genFace() {
-  const myStuff = new Promise(function (resolve) {
-      document.getElementById("loading").innerHTML = "loading...";
-  setTimeout(
-    function () {
-      resolve();
-    },
-    3000,
-    "after timeout"
-  );
-}).then(plusSlides()).then(document.getElementById("loading").innerHTML = "");
-			}
+  document.getElementById("generating").innerHTML = "generating...";
+  Promise.resolve(1).delay(2000).then(function(v) {
+  plusSlides();
+  document.getElementById("generating").innerHTML = ""
+});
+}
+
+// async function genFace() {
+//   const myStuff = new Promise(function (resolve) {
+//       document.getElementById("loading").innerHTML = "loading...";
+//   setTimeout(
+//     function () {
+//       resolve();
+//     },
+//     3000,
+//     "after timeout"
+//   );
+// }).then(plusSlides()).then(document.getElementById("loading").innerHTML = "");
+// 			}
 
 </script>
 

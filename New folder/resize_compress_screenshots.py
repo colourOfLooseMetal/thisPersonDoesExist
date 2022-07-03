@@ -19,7 +19,7 @@ def load_files_from_folder(folder):
             newWidth = int(width * 5)
             margin = int((width - newWidth)/2)
             crop_img = img[0:height, margin:margin+newWidth]
-            resize = cv2.resize(img, (width*5, height*5))
+            resize = cv2.resize(img, (int(width*3.75), int(height*3.75)))
             cv2.imwrite("./rs/" + newFname, resize,
                         [int(cv2.IMWRITE_JPEG_QUALITY), qual])
 
